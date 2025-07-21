@@ -10,6 +10,9 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 加载 .env 文件
+LoadEnvironmentVariables();
+
 // 配置Serilog日志
 builder.Host.UseSerilog((context, configuration) =>
 {
@@ -112,3 +115,39 @@ app.Logger.LogInformation("Swagger UI: http://localhost:5000");
 app.Logger.LogInformation("健康检查: http://localhost:5000/health");
 
 app.Run();
+
+/// <summary>
+/// 加载 .env 文件中的环境变量
+/// </summary>
+static void LoadEnvironmentVariables()
+{
+    var envFile = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+    if (!File.Exists(envFile))
+    {
+        Console.WriteLine(".env file not found, skipping environment variable loading");
+        return;
+    }
+
+    try
+    {
+        var lines = File.ReadAllLines(envFile);
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line) || line.StartsWith('#'))
+                continue;
+
+            var parts = line.Split('=', 2, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 2)
+            {
+                var key = parts[0].Trim();
+                var value = parts[1].Trim();
+                Environment.SetEnvironmentVariable(key, value);
+                Console.WriteLine($"Loaded environment variable: {key}");
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error loading .env file: {ex.Message}");
+    }
+}

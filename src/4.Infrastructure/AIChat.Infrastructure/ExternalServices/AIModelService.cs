@@ -180,6 +180,7 @@ public class AIModelService : IAIModelService
                 SupportsStreaming = bool.Parse(modelSection["SupportsStreaming"] ?? "true"),
                 SupportsThinking = bool.Parse(modelSection["SupportsThinking"] ?? "false"),
                 ApiEndpoint = modelSection["ApiEndpoint"],
+                ModelName = modelSection["ModelName"],
                 MaxTokens = int.TryParse(modelSection["MaxTokens"], out var maxTokens) ? maxTokens : null,
                 Temperature = double.TryParse(modelSection["Temperature"], out var temperature) ? temperature : null
             };
@@ -207,6 +208,7 @@ public class AIModelService : IAIModelService
         {
             "openai" => Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? string.Empty,
             "anthropic" => Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY") ?? string.Empty,
+            "siliconflow" => Environment.GetEnvironmentVariable("SILICONFLOW_API_KEY") ?? string.Empty,
             _ => string.Empty
         };
     }
@@ -231,6 +233,16 @@ public class AIModelService : IAIModelService
                 builder.AddOpenAIChatCompletion(
                     modelId: config.Id,
                     apiKey: config.ApiKey);
+                break;
+            case "siliconflow":
+                // SiliconFlow 使用 OpenAI 兼容的 API
+                builder.AddOpenAIChatCompletion(
+                    modelId: config.ModelName ?? config.Id,
+                    apiKey: config.ApiKey,
+                    httpClient: new HttpClient()
+                    {
+                        BaseAddress = new Uri(config.ApiEndpoint ?? "https://api.siliconflow.cn/v1")
+                    });
                 break;
             default:
                 throw new NotSupportedException($"Provider {config.Provider} is not supported");

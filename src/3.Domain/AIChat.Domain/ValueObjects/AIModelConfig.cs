@@ -41,6 +41,11 @@ public class AIModelConfig
     public string? ApiEndpoint { get; set; }
 
     /// <summary>
+    /// 实际模型名称(用于API调用)
+    /// </summary>
+    public string? ModelName { get; set; }
+
+    /// <summary>
     /// 最大令牌数
     /// </summary>
     public int? MaxTokens { get; set; }
