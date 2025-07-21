@@ -1,0 +1,346 @@
+/* 消息气泡样式 - Apple HIG 设计 */
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--spacing-md);
+  max-width: 85%;
+  word-wrap: break-word;
+}
+
+.message-container.user {
+  align-items: flex-end;
+  margin-left: auto;
+}
+
+.message-container.assistant {
+  align-items: flex-start;
+  margin-right: auto;
+}
+
+/* 消息气泡 */
+.message-bubble {
+  position: relative;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  min-width: 80px;
+  max-width: 100%;
+}
+
+.message-bubble:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* 用户消息气泡 */
+.user-bubble {
+  background: var(--color-blue);
+  color: white;
+  border-bottom-right-radius: var(--border-radius-sm);
+}
+
+.user-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid var(--color-blue);
+  border-bottom: 8px solid transparent;
+}
+
+/* AI助手消息气泡 */
+.assistant-bubble {
+  background: var(--color-background-secondary);
+  color: var(--color-label);
+  border: 1px solid var(--color-separator);
+  border-bottom-left-radius: var(--border-radius-sm);
+}
+
+.assistant-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -9px;
+  width: 0;
+  height: 0;
+  border-right: 8px solid var(--color-background-secondary);
+  border-bottom: 8px solid transparent;
+  border-top: 1px solid var(--color-separator);
+}
+
+/* 消息头部 */
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+  opacity: 0.8;
+}
+
+.message-role {
+  font-size: var(--font-size-caption-1);
+  font-weight: var(--font-weight-semibold);
+}
+
+.user-bubble .message-role {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.assistant-bubble .message-role {
+  color: var(--color-label-secondary);
+}
+
+.message-time {
+  font-size: var(--font-size-caption-2);
+  opacity: 0.6;
+}
+
+.user-bubble .message-time {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.assistant-bubble .message-time {
+  color: var(--color-label-tertiary);
+}
+
+/* 消息内容 */
+.message-content {
+  position: relative;
+}
+
+.message-text {
+  font-size: var(--font-size-body);
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.user-bubble .message-text {
+  color: white;
+}
+
+.assistant-bubble .message-text {
+  color: var(--color-label);
+}
+
+/* 模型标识 */
+.model-badge {
+  margin-top: var(--spacing-xs);
+  padding: 2px var(--spacing-xs);
+  background: rgba(0, 122, 255, 0.1);
+  border-radius: var(--border-radius-sm);
+  display: inline-block;
+}
+
+.model-name {
+  font-size: var(--font-size-caption-2);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 消息状态 */
+.message-status {
+  position: absolute;
+  bottom: var(--spacing-xs);
+  right: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+}
+
+.sent-indicator {
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+}
+
+.received-indicator {
+  display: flex;
+  align-items: center;
+}
+
+.indicator-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-green);
+  border-radius: 50%;
+}
+
+/* 代码块样式 */
+.message-text pre {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm);
+  margin: var(--spacing-xs) 0;
+  overflow-x: auto;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: var(--font-size-footnote);
+}
+
+.user-bubble .message-text pre {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.assistant-bubble .message-text pre {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.message-text code {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: var(--font-size-footnote);
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.user-bubble .message-text code {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* 链接样式 */
+.message-text a {
+  color: inherit;
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+.message-text a:hover {
+  opacity: 1;
+}
+
+/* 加载状态 */
+.message-bubble.loading {
+  opacity: 0.7;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .assistant-bubble {
+    background: var(--color-background-secondary);
+    border-color: var(--color-separator);
+  }
+  
+  .assistant-bubble::after {
+    border-right-color: var(--color-background-secondary);
+    border-top-color: var(--color-separator);
+  }
+  
+  .message-text pre {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .message-text code {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .model-badge {
+    background: rgba(0, 122, 255, 0.2);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .message-container {
+    max-width: 95%;
+  }
+  
+  .message-bubble {
+    padding: var(--spacing-sm);
+  }
+  
+  .message-text {
+    font-size: var(--font-size-callout);
+  }
+  
+  .message-header {
+    margin-bottom: var(--spacing-xs);
+  }
+}
+
+/* 可访问性 */
+.message-bubble:focus-within {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+.message-bubble[aria-selected="true"] {
+  box-shadow: 0 0 0 2px var(--color-blue);
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .user-bubble {
+    background: var(--color-blue-dark);
+  }
+  
+  .assistant-bubble {
+    border-width: 2px;
+    border-color: var(--color-opaque-separator);
+  }
+  
+  .message-text {
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+/* 动画效果 */
+.message-container {
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+.message-container.user {
+  animation: messageSlideInFromRight 0.3s ease-out;
+}
+
+.message-container.assistant {
+  animation: messageSlideInFromLeft 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes messageSlideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes messageSlideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

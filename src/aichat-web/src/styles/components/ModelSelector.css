@@ -1,0 +1,362 @@
+/* 模型选择器样式 - Apple HIG 设计 */
+
+.model-selector {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.model-selector.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* 主按钮 */
+.model-selector-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-separator);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.model-selector-button:hover {
+  background: var(--color-background-tertiary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.model-selector-button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.model-selector-button.open {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+/* 选中模型显示 */
+.selected-model {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.model-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.model-info {
+  flex: 1;
+  text-align: left;
+}
+
+.model-name {
+  font-size: var(--font-size-callout);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-label);
+  line-height: 1.2;
+}
+
+.model-provider {
+  font-size: var(--font-size-caption-1);
+  color: var(--color-label-secondary);
+  margin-top: 1px;
+}
+
+/* 功能标识 */
+.model-features {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-left: var(--spacing-sm);
+}
+
+.feature-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  border-radius: 50%;
+  background: rgba(0, 122, 255, 0.1);
+  cursor: help;
+}
+
+.feature-badge.thinking {
+  background: rgba(255, 149, 0, 0.1);
+}
+
+.feature-badge.streaming {
+  background: rgba(52, 199, 89, 0.1);
+}
+
+/* 下拉箭头 */
+.dropdown-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-label-secondary);
+  transition: transform var(--transition-fast);
+  margin-left: var(--spacing-sm);
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* 下拉菜单 */
+.model-dropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-xs));
+  left: 0;
+  right: 0;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-separator);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  animation: dropdownSlideIn 0.2s ease-out;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 下拉菜单头部 */
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-separator);
+  background: var(--color-background-tertiary);
+  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+}
+
+.dropdown-title {
+  font-size: var(--font-size-callout);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-label);
+}
+
+.close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-label-secondary);
+  transition: all var(--transition-fast);
+}
+
+.close-button:hover {
+  background: var(--color-separator);
+  color: var(--color-label);
+}
+
+/* 模型列表 */
+.model-list {
+  padding: var(--spacing-xs);
+}
+
+.model-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: var(--spacing-xs);
+}
+
+.model-option:last-child {
+  margin-bottom: 0;
+}
+
+.model-option:hover:not(.unavailable) {
+  background: rgba(0, 122, 255, 0.05);
+}
+
+.model-option.selected {
+  background: rgba(0, 122, 255, 0.1);
+  border: 1px solid rgba(0, 122, 255, 0.3);
+}
+
+.model-option.unavailable {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.model-option-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.model-details {
+  flex: 1;
+  text-align: left;
+}
+
+.model-option .model-name {
+  font-size: var(--font-size-callout);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-label);
+}
+
+.model-option .model-provider {
+  font-size: var(--font-size-caption-1);
+  font-weight: var(--font-weight-medium);
+  margin-top: 1px;
+}
+
+/* 不可用标识 */
+.unavailable-badge {
+  background: var(--color-red);
+  color: white;
+  font-size: var(--font-size-caption-2);
+  font-weight: var(--font-weight-semibold);
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  margin-left: var(--spacing-sm);
+}
+
+/* 选中指示器 */
+.selected-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-blue);
+  margin-left: var(--spacing-sm);
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 32px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.empty-text {
+  font-size: var(--font-size-callout);
+  color: var(--color-label-secondary);
+}
+
+/* 遮罩层 */
+.model-selector-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .model-selector-button {
+    background: var(--color-background-secondary);
+    border-color: var(--color-separator);
+  }
+  
+  .model-dropdown {
+    background: var(--color-background-secondary);
+    border-color: var(--color-separator);
+  }
+  
+  .dropdown-header {
+    background: var(--color-background-tertiary);
+    border-bottom-color: var(--color-separator);
+  }
+  
+  .feature-badge {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .model-selector {
+    max-width: 100%;
+  }
+  
+  .model-dropdown {
+    max-height: 300px;
+  }
+  
+  .model-option {
+    padding: var(--spacing-md);
+  }
+  
+  .model-features {
+    flex-wrap: wrap;
+  }
+}
+
+/* 可访问性 */
+.model-selector-button:focus {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+.model-option:focus {
+  outline: 2px solid var(--color-blue);
+  outline-offset: -2px;
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .model-selector-button {
+    border-width: 2px;
+  }
+  
+  .model-dropdown {
+    border-width: 2px;
+  }
+  
+  .model-option.selected {
+    border-width: 2px;
+    background: rgba(0, 122, 255, 0.2);
+  }
+  
+  .feature-badge {
+    border: 1px solid currentColor;
+  }
+}
