@@ -1,13 +1,17 @@
+using SqlSugar;
+
 namespace AIChat.Domain.Entities;
 
 /// <summary>
 /// 对话实体 - 表示一次完整的对话会话
 /// </summary>
+[SugarTable("Conversations")]
 public class Conversation
 {
     /// <summary>
     /// 对话唯一标识
     /// </summary>
+    [SugarColumn(IsPrimaryKey = true)]
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
@@ -38,6 +42,7 @@ public class Conversation
     /// <summary>
     /// 对话中的所有消息
     /// </summary>
+    [SugarColumn(IsIgnore = true)]
     public List<Message> Messages { get; set; } = new();
 
     /// <summary>

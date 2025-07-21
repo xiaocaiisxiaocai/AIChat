@@ -1,13 +1,17 @@
+using SqlSugar;
+
 namespace AIChat.Domain.Entities;
 
 /// <summary>
 /// 消息实体 - 表示对话中的单条消息
 /// </summary>
+[SugarTable("Messages")]
 public class Message
 {
     /// <summary>
     /// 消息唯一标识
     /// </summary>
+    [SugarColumn(IsPrimaryKey = true)]
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
@@ -28,6 +32,7 @@ public class Message
     /// <summary>
     /// AI思考过程内容(仅Claude等支持思考的模型使用)
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public string? ThinkingContent { get; set; }
 
     /// <summary>

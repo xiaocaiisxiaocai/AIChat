@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
+using System.Text;
+using System.Text.Json;
 
 namespace AIChat.Infrastructure.ExternalServices;
 
@@ -16,11 +18,13 @@ public class AIModelService : IAIModelService
     private readonly IConfiguration _configuration;
     private readonly ILogger<AIModelService> _logger;
     private readonly Dictionary<string, AIModelConfig> _modelConfigs;
+    private readonly HttpClient _httpClient;
 
     public AIModelService(IConfiguration configuration, ILogger<AIModelService> logger)
     {
         _configuration = configuration;
         _logger = logger;
+        _httpClient = new HttpClient();
         _modelConfigs = LoadModelConfigurations();
     }
 
@@ -37,6 +41,13 @@ public class AIModelService : IAIModelService
 
         try
         {
+            // 对于SiliconFlow，直接调用API
+            if (config.Provider.ToLower() == "siliconflow")
+            {
+                return await CallSiliconFlowApiAsync(config, message, conversationHistory);
+            }
+
+            // 对于其他提供商，使用Semantic Kernel
             var kernel = CreateKernel(config);
             var chatService = kernel.GetRequiredService<IChatCompletionService>();
 
@@ -214,6 +225,72 @@ public class AIModelService : IAIModelService
     }
 
     /// <summary>
+    /// 直接调用SiliconFlow API
+    /// </summary>
+    private async Task<ChatResponse> CallSiliconFlowApiAsync(AIModelConfig config, string message, List<string>? conversationHistory = null)
+    {
+        var apiEndpoint = config.ApiEndpoint ?? "https://api.siliconflow.cn/v1";
+        var url = $"{apiEndpoint}/chat/completions";
+
+        // 构建消息列表
+        var messages = new List<object>();
+        
+        // 添加历史对话
+        if (conversationHistory != null)
+        {
+            foreach (var historyMessage in conversationHistory)
+            {
+                messages.Add(new { role = "user", content = historyMessage });
+            }
+        }
+        
+        // 添加当前消息
+        messages.Add(new { role = "user", content = message });
+
+        var requestBody = new
+        {
+            model = config.ModelName ?? config.Id,
+            messages = messages,
+            max_tokens = config.MaxTokens ?? 4000,
+            temperature = config.Temperature ?? 0.7
+        };
+
+        var jsonContent = JsonSerializer.Serialize(requestBody);
+        var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+        _httpClient.DefaultRequestHeaders.Clear();
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {config.ApiKey}");
+
+        var response = await _httpClient.PostAsync(url, httpContent);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException($"SiliconFlow API error: {response.StatusCode} - {responseContent}");
+        }
+
+        var jsonResponse = JsonSerializer.Deserialize<JsonElement>(responseContent);
+        var choice = jsonResponse.GetProperty("choices")[0];
+        var messageObj = choice.GetProperty("message");
+        var content = messageObj.GetProperty("content").GetString() ?? "";
+        
+        // 检查是否有思考过程内容（reasoning_content）
+        string? thinkingContent = null;
+        if (messageObj.TryGetProperty("reasoning_content", out var reasoningElement))
+        {
+            thinkingContent = reasoningElement.GetString();
+        }
+
+        return new ChatResponse
+        {
+            Content = content,
+            ThinkingContent = thinkingContent,
+            ModelUsed = config.Id,
+            CreatedAt = DateTime.UtcNow
+        };
+    }
+
+    /// <summary>
     /// 创建Semantic Kernel实例
     /// </summary>
     private Kernel CreateKernel(AIModelConfig config)
@@ -236,13 +313,14 @@ public class AIModelService : IAIModelService
                 break;
             case "siliconflow":
                 // SiliconFlow 使用 OpenAI 兼容的 API
+                var httpClient = new HttpClient()
+                {
+                    BaseAddress = new Uri(config.ApiEndpoint ?? "https://api.siliconflow.cn/v1")
+                };
                 builder.AddOpenAIChatCompletion(
                     modelId: config.ModelName ?? config.Id,
                     apiKey: config.ApiKey,
-                    httpClient: new HttpClient()
-                    {
-                        BaseAddress = new Uri(config.ApiEndpoint ?? "https://api.siliconflow.cn/v1")
-                    });
+                    httpClient: httpClient);
                 break;
             default:
                 throw new NotSupportedException($"Provider {config.Provider} is not supported");
