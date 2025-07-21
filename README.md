@@ -220,7 +220,9 @@ npm run lint
 
 ## 📝 许可证
 
-MIT License - 详见 [LICENSE](LICENSE) 文件
+Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件
+
+本项目采用 Apache 2.0 开源许可证，允许商业使用、修改和分发。
 
 ## 🤝 贡献
 

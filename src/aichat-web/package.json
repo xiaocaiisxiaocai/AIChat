@@ -47,5 +47,5 @@
   "proxy": "http://localhost:5000",
   "homepage": ".",
   "author": "AIChat Team",
-  "license": "MIT"
+  "license": "Apache-2.0"
 }
