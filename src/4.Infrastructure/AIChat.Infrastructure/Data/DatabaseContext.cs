@@ -1,4 +1,5 @@
 using AIChat.Domain.Entities;
+using AIChat.Shared.Plugins;
 using Microsoft.Extensions.Configuration;
 using SqlSugar;
 
@@ -57,6 +58,11 @@ public class DatabaseContext
     public SimpleClient<Message> Messages => new(_db);
 
     /// <summary>
+    /// 插件表操作
+    /// </summary>
+    public SimpleClient<PluginManifest> Plugins => new(_db);
+
+    /// <summary>
     /// 初始化数据库表结构
     /// </summary>
     private void InitializeTables()
@@ -66,6 +72,7 @@ public class DatabaseContext
             // 创建表结构
             _db.CodeFirst.InitTables<Conversation>();
             _db.CodeFirst.InitTables<Message>();
+            _db.CodeFirst.InitTables<PluginManifest>();
 
             Console.WriteLine("[Database] Tables initialized successfully");
         }

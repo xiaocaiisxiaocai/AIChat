@@ -9,6 +9,7 @@ import '../styles/components/ChatInterface.css';
  */
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
   conversation,
+  selectedModel: _selectedModel,
   onSendMessage,
   isLoading
 }) => {
@@ -45,11 +46,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }, [inputMessage]);
 
   const handleSendMessage = () => {
-    if (!inputMessage.trim() || isLoading || isStreaming) return;
-    
+    if (!inputMessage.trim() || isLoading || isStreaming || !onSendMessage) return;
+
     onSendMessage(inputMessage.trim());
     setInputMessage('');
-    
+
     // 重置输入框高度
     if (inputRef.current) {
       inputRef.current.style.height = 'auto';

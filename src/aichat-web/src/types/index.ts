@@ -60,6 +60,7 @@ export interface AIModel {
   maxTokens?: number;
   temperature?: number;
   isValid: boolean;
+  isDefault?: boolean;
 }
 
 export interface CreateConversationRequest {
@@ -113,16 +114,18 @@ export type ThemeMode = 'light' | 'dark' | 'auto';
 // 组件属性类型
 export interface ChatInterfaceProps {
   conversation: Conversation | null;
-  onSendMessage: (_message: string) => void;
+  selectedModel?: AIModel | null;
+  onSendMessage?: (_message: string) => void;
   isLoading: boolean;
 }
 
 export interface ConversationListProps {
   conversations: Conversation[];
   currentConversationId?: string;
-  onSelectConversation: (_conversationId: string) => void;
+  onSelectConversation: (_conversation: any) => void;
   onCreateConversation: () => void;
   onDeleteConversation: (_conversationId: string) => void;
+  loading?: boolean;
 }
 
 export interface ModelSelectorProps {
@@ -142,6 +145,93 @@ export interface MessageBubbleProps {
   message: Message;
   isThinking?: boolean;
   thinkingContent?: string;
+}
+
+// 插件系统类型定义
+export interface PluginManifest {
+  id: string;
+  name: string;
+  version: string;
+  description: string;
+  author: string;
+  type: PluginType;
+  status: PluginStatus;
+  createdAt: string;
+  updatedAt: string;
+  isEnabled: boolean;
+  supportedFeatures: string[];
+  configurationSchema?: Record<string, any>;
+  configuration?: Record<string, any>;
+}
+
+/* eslint-disable no-unused-vars */
+export enum PluginType {
+  AIModel = 'AIModel',
+  UIComponent = 'UIComponent',
+  MessageProcessor = 'MessageProcessor',
+  Storage = 'Storage',
+  Notification = 'Notification',
+  Tool = 'Tool'
+}
+
+export enum PluginStatus {
+  Installed = 'Installed',
+  Enabled = 'Enabled',
+  Disabled = 'Disabled',
+  Error = 'Error',
+  Loading = 'Loading'
+}
+/* eslint-enable no-unused-vars */
+
+export interface PluginInstallRequest {
+  name: string;
+  version: string;
+  description: string;
+  author: string;
+  type: PluginType;
+  supportedFeatures: string[];
+  configurationSchema?: Record<string, any>;
+  configuration?: Record<string, any>;
+}
+
+export interface PluginState {
+  installedPlugins: PluginManifest[];
+  enabledPlugins: PluginManifest[];
+  isLoading: boolean;
+  error: string | null;
+  selectedPlugin: PluginManifest | null;
+}
+
+export interface PluginContainerProps {
+  plugins: PluginManifest[];
+  onInstallPlugin: (_plugin: PluginInstallRequest) => void;
+  onEnablePlugin: (_pluginId: string) => void;
+  onDisablePlugin: (_pluginId: string) => void;
+  onUninstallPlugin: (_pluginId: string) => void;
+  onReloadPlugin: (_pluginId: string) => void;
+  onSelectPlugin: (_plugin: PluginManifest) => void;
+  isLoading?: boolean;
+}
+
+export interface PluginCardProps {
+  plugin: PluginManifest;
+  onEnable: (_pluginId: string) => void;
+  onDisable: (_pluginId: string) => void;
+  onUninstall: (_pluginId: string) => void;
+  onReload: (_pluginId: string) => void;
+  onSelect: (_plugin: PluginManifest) => void;
+  isLoading?: boolean;
+}
+
+export interface PluginManagerProps {
+  isVisible: boolean;
+  onClose: () => void;
+  pluginState: PluginState;
+  onInstallPlugin: (_plugin: PluginInstallRequest) => void;
+  onEnablePlugin: (_pluginId: string) => void;
+  onDisablePlugin: (_pluginId: string) => void;
+  onUninstallPlugin: (_pluginId: string) => void;
+  onReloadPlugin: (_pluginId: string) => void;
 }
 
 // 工具函数类型

@@ -3,7 +3,7 @@
 .message-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
   max-width: 85%;
   word-wrap: break-word;
 }
@@ -22,7 +22,7 @@
 .message-bubble {
   position: relative;
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-fast);
   min-width: 80px;

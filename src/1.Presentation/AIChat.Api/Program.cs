@@ -6,6 +6,7 @@ using AIChat.Domain.Services;
 using AIChat.Infrastructure.Data;
 using AIChat.Infrastructure.ExternalServices;
 using AIChat.Infrastructure.Repositories;
+using AIChat.Shared.Plugins;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,13 +55,21 @@ builder.Services.AddSingleton<DatabaseContext>();
 // 注册仓储
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IPluginRepository, PluginRepository>();
 
 // 注册领域服务
 builder.Services.AddScoped<IAIModelService, AIModelService>();
 builder.Services.AddScoped<IChatDomainService, ChatDomainService>();
 
+// 注册插件系统服务
+builder.Services.AddSingleton<PluginManager>();
+builder.Services.AddSingleton<IPluginEventBus, PluginEventBus>();
+builder.Services.AddSingleton<IPluginStorage, PluginStorage>();
+builder.Services.AddScoped<IPluginContext, SimplePluginContext>();
+
 // 注册应用服务
 builder.Services.AddScoped<ChatAppService>();
+builder.Services.AddScoped<PluginAppService>();
 
 // 添加HTTP客户端
 builder.Services.AddHttpClient();

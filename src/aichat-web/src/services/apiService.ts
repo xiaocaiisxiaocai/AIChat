@@ -1,12 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
-import { 
-  ChatRequest, 
-  ChatResponse, 
-  Conversation, 
-  AIModel, 
+import {
+  ChatRequest,
+  ChatResponse,
+  Conversation,
+  AIModel,
   CreateConversationRequest,
   UpdateConversationRequest,
-  ApiError
+  ApiError,
+  PluginManifest,
+  PluginInstallRequest
 } from '../types';
 
 // API 基础配置
@@ -169,6 +171,86 @@ export const chatApi = {
    */
   getAvailableModels: async (): Promise<AIModel[]> => {
     const response = await apiClient.get<AIModel[]>('/chat/models');
+    return response.data;
+  },
+};
+
+/**
+ * 插件管理API
+ */
+export const pluginApi = {
+  /**
+   * 获取已安装的插件列表
+   */
+  getInstalledPlugins: async (): Promise<PluginManifest[]> => {
+    const response = await apiClient.get<PluginManifest[]>('/plugins');
+    return response.data;
+  },
+
+  /**
+   * 获取已启用的插件列表
+   */
+  getEnabledPlugins: async (): Promise<PluginManifest[]> => {
+    const response = await apiClient.get<PluginManifest[]>('/plugins/enabled');
+    return response.data;
+  },
+
+  /**
+   * 根据ID获取插件详情
+   */
+  getPlugin: async (pluginId: string): Promise<PluginManifest> => {
+    const response = await apiClient.get<PluginManifest>(`/plugins/${pluginId}`);
+    return response.data;
+  },
+
+  /**
+   * 安装新插件
+   */
+  installPlugin: async (plugin: PluginInstallRequest): Promise<PluginManifest> => {
+    const response = await apiClient.post<PluginManifest>('/plugins/install', plugin);
+    return response.data;
+  },
+
+  /**
+   * 启用插件
+   */
+  enablePlugin: async (pluginId: string): Promise<void> => {
+    await apiClient.post(`/plugins/${pluginId}/enable`);
+  },
+
+  /**
+   * 禁用插件
+   */
+  disablePlugin: async (pluginId: string): Promise<void> => {
+    await apiClient.post(`/plugins/${pluginId}/disable`);
+  },
+
+  /**
+   * 卸载插件
+   */
+  uninstallPlugin: async (pluginId: string): Promise<void> => {
+    await apiClient.delete(`/plugins/${pluginId}`);
+  },
+
+  /**
+   * 重新加载插件
+   */
+  reloadPlugin: async (pluginId: string): Promise<PluginManifest> => {
+    const response = await apiClient.post<PluginManifest>(`/plugins/${pluginId}/reload`);
+    return response.data;
+  },
+
+  /**
+   * 获取插件统计信息
+   */
+  getPluginStats: async (): Promise<{
+    totalInstalled: number;
+    totalEnabled: number;
+    totalDisabled: number;
+    totalErrors: number;
+    byType: Record<string, number>;
+  }> => {
+    const response = await apiClient.get('/plugins/stats');
     return response.data;
   },
 };

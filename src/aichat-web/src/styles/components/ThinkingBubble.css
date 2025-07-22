@@ -4,13 +4,14 @@
   background: rgba(0, 122, 255, 0.08);
   border: 2px dashed var(--color-blue);
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
   font-style: italic;
   color: var(--color-blue);
   transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.1);
 }
 
 .thinking-bubble.active {
@@ -30,15 +31,20 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid rgba(0, 122, 255, 0.15);
 }
 
 .thinking-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 122, 255, 0.15);
+  border-radius: 50%;
+  font-size: 14px;
 }
 
 .thinking-dots {

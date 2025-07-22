@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\3.Domain\AIChat.Domain\AIChat.Domain.csproj" />
+    <ProjectReference Include="..\..\5.Shared\AIChat.Shared\AIChat.Shared.csproj" />
   </ItemGroup>
 
 </Project>

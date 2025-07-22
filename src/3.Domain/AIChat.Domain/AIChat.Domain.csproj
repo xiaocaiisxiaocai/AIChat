@@ -10,4 +10,8 @@
     <PackageReference Include="SqlSugarCore" Version="5.1.4.156" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\5.Shared\AIChat.Shared\AIChat.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,93 @@
+{
+  "id": "com.aichat.plugins.timestamp",
+  "name": "时间戳插件",
+  "version": "1.0.0",
+  "description": "为聊天消息添加精确时间戳，支持多种时间格式和时区转换",
+  "author": "AIChat Team",
+  "type": "MessageProcessor",
+  "status": "Disabled",
+  "assembly": "TimestampPlugin.dll",
+  "entryPoint": "AIChat.Plugins.Timestamp.TimestampPlugin",
+  "dependencies": [],
+  "minSystemVersion": "1.0.0",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "default": true,
+        "description": "是否启用时间戳功能"
+      },
+      "defaultFormat": {
+        "type": "string",
+        "default": "yyyy-MM-dd HH:mm:ss",
+        "description": "默认时间格式",
+        "enum": [
+          "yyyy-MM-dd HH:mm:ss",
+          "yyyy-MM-dd HH:mm:ss.fff",
+          "MM/dd/yyyy HH:mm:ss",
+          "dd/MM/yyyy HH:mm:ss",
+          "yyyy年MM月dd日 HH:mm:ss",
+          "HH:mm:ss",
+          "unix"
+        ]
+      },
+      "timeZone": {
+        "type": "string",
+        "default": "Asia/Shanghai",
+        "description": "时区设置"
+      },
+      "showMilliseconds": {
+        "type": "boolean",
+        "default": false,
+        "description": "是否显示毫秒"
+      },
+      "autoAddToMessages": {
+        "type": "boolean",
+        "default": true,
+        "description": "是否自动为消息添加时间戳"
+      }
+    },
+    "required": ["enabled", "defaultFormat", "timeZone"]
+  },
+  "permissions": [
+    "storage.read",
+    "storage.write",
+    "events.publish",
+    "events.subscribe",
+    "api.call"
+  ],
+  "apiEndpoints": [
+    {
+      "path": "/api/plugins/timestamp/current",
+      "method": "GET",
+      "description": "获取当前时间戳",
+      "requiredPermissions": ["api.call"]
+    },
+    {
+      "path": "/api/plugins/timestamp/format",
+      "method": "POST",
+      "description": "格式化指定时间",
+      "requiredPermissions": ["api.call"]
+    },
+    {
+      "path": "/api/plugins/timestamp/formats",
+      "method": "GET",
+      "description": "获取支持的时间格式",
+      "requiredPermissions": ["api.call"]
+    }
+  ],
+  "uiMountPoints": [
+    {
+      "id": "timestamp-indicator",
+      "location": "messageList",
+      "component": "TimestampIndicator",
+      "priority": 10,
+      "defaultVisible": true
+    }
+  ],
+  "icon": "timestamp-icon.png",
+  "supportsHotReload": true,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
